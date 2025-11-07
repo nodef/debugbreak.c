@@ -1,6 +1,7 @@
 # Debug Break
 
-[debugbreak.h](https://github.com/scottt/debugbreak/blob/master/debugbreak.h) allows you to put breakpoints in your C/C++ code with a call to **debug_break()**:
+[debugbreak.h](https://github.com/scottt/debugbreak/blob/master/debugbreak.h), by [Scott Tsai](https://github.com/scottt), allows you to put breakpoints in your C/C++ code with a call to **debug_break()**:
+
 ```C
 #include <stdio.h>
 #include "debugbreak.h"
@@ -20,6 +21,19 @@ int main()
 **License**: the very permissive [2-Clause BSD](https://github.com/scottt/debugbreak/blob/master/COPYING).
 
 Known Problem: if continuing execution after a debugbreak breakpoint hit doesn't work (e.g. on ARM or POWER), see [HOW-TO-USE-DEBUGBREAK-GDB-PY.md](HOW-TO-USE-DEBUGBREAK-GDB-PY.md) for a workaround.
+
+Installation
+================================
+
+Run:
+```bash
+$ npm i debugbreak.c
+```
+
+And then include `debugbreak.h` as follows:
+```c
+#include "node_modules/debugbreak.c/debugbreak.h"
+```
 
 Implementation Notes
 ================================
@@ -125,3 +139,9 @@ Behavior on Different Architectures
 | Apple compiler on AArch64     | `__builtin_trap()` |
 | Otherwise          | `raise(SIGTRAP)` |
 
+<br>
+<br>
+
+
+[![ORG](https://img.shields.io/badge/org-nodef-green?logo=Org)](https://nodef.github.io)
+![](https://ga-beacon.deno.dev/G-RC63DPBH3P:SH3Eq-NoQ9mwgYeHWxu7cw/github.com/nodef/debugbreak.c)
