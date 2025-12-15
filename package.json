@@ -1,0 +1,24 @@
+{
+  "name": "debugbreak.c",
+  "version": "1.0.0",
+  "description": "Break into the debugger programmatically; Scott Tsai (2011).",
+  "keywords": [
+    "c",
+    "library",
+    "mpeg",
+    "video",
+    "writer",
+    "no allocations",
+    "minimalistic"
+  ],
+  "homepage": "https://github.com/nodef/debugbreak.c#readme",
+  "bugs": {
+    "url": "https://github.com/nodef/debugbreak.c/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nodef/debugbreak.c.git"
+  },
+  "license": "BSD-2-Clause",
+  "main": "debugbreak.h"
+}
