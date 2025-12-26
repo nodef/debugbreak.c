@@ -20,20 +20,52 @@ int main()
 
 **License**: the very permissive [2-Clause BSD](https://github.com/scottt/debugbreak/blob/master/COPYING).
 
-Known Problem: if continuing execution after a debugbreak breakpoint hit doesn't work (e.g. on ARM or POWER), see [HOW-TO-USE-DEBUGBREAK-GDB-PY.md](HOW-TO-USE-DEBUGBREAK-GDB-PY.md) for a workaround.
+Known Problem: if continuing execution after a debugbreak breakpoint hit doesn't work (e.g. on ARM or POWER), see [HOW-TO-USE-DEBUGBREAK-GDB-PY.md](https://github.com/scottt/debugbreak/blob/master/HOW-TO-USE-DEBUGBREAK-GDB-PY.md) for a workaround.
+
+<br>
 
 Installation
 ================================
 
 Run:
-```bash
+
+```sh
 $ npm i debugbreak.c
 ```
 
 And then include `debugbreak.h` as follows:
+
 ```c
+// main.c
 #include "node_modules/debugbreak.c/debugbreak.h"
+
+int main() { /* ... */ }
 ```
+
+And then compile with `clang` or `gcc` as usual.
+
+```bash
+$ clang main.c  # or, use gcc
+$ gcc   main.c
+```
+
+You may also use a simpler approach:
+
+```c
+// main.c
+#include <debugbreak.h>
+
+int main() { /* ... */ }
+```
+
+If you add the path `node_modules/debugbreak.c` to your compiler's include paths.
+
+```bash
+$ clang -I./node_modules/debugbreak.c main.c  # or, use gcc
+$ gcc   -I./node_modules/debugbreak.c main.c
+```
+
+<br>
 
 Implementation Notes
 ================================
@@ -59,9 +91,9 @@ int main()
 compiles to:
 ```
 main
-0x0000000000400390 <+0>:     0f 0b	ud2    
+0x0000000000400390 <+0>:     0f 0b	ud2
 ```
-Notice how the call to `printf()` is not present in the assembly output. 
+Notice how the call to `printf()` is not present in the assembly output.
 
 Further, on i386 / x86-64 **__builtin_trap()** generates an **ud2** instruction which triggers **SIGILL** instead of **SIGTRAP**. This makes it necessary to change GDB's default behavior on **SIGILL** to not terminate the process being debugged:
 ```
@@ -75,7 +107,7 @@ On ARM, **__builtin_trap()** generates a call to **abort()**, making it even les
 ```C
 #include <stdio.h>
 #include "debugbreak.h"
-   
+
 int main()
 {
 	debug_break();
@@ -87,12 +119,12 @@ compiles to:
 ```
 main
 0x00000000004003d0 <+0>:     50	push   %rax
-0x00000000004003d1 <+1>:     cc	int3   
+0x00000000004003d1 <+1>:     cc	int3
 0x00000000004003d2 <+2>:     bf a0 05 40 00	mov    $0x4005a0,%edi
 0x00000000004003d7 <+7>:     e8 d4 ff ff ff	callq  0x4003b0 <puts@plt>
 0x00000000004003dc <+12>:    31 c0	xor    %eax,%eax
 0x00000000004003de <+14>:    5a	pop    %rdx
-0x00000000004003df <+15>:    c3	retq   
+0x00000000004003df <+15>:    c3	retq
 ```
 which correctly trigges **SIGTRAP** and single-stepping in GDB after a **debug_break()** hit works well.
 
@@ -106,7 +138,7 @@ On ARM, **debug_break()** generates **.inst 0xe7f001f0** in ARM mode and **.inst
 (gdb) # Change $l from 2 to 4 for ARM mode
 ```
 to jump over the instruction.
-A new GDB command, **debugbreak-step**, is defined in [debugbreak-gdb.py](https://github.com/scottt/debugbreak/blob/master/debugbreak-gdb.py) to automate the above. See [HOW-TO-USE-DEBUGBREAK-GDB-PY.md](HOW-TO-USE-DEBUGBREAK-GDB-PY.md) for sample usage.
+A new GDB command, **debugbreak-step**, is defined in [debugbreak-gdb.py](https://github.com/scottt/debugbreak/blob/master/debugbreak-gdb.py) to automate the above. See [HOW-TO-USE-DEBUGBREAK-GDB-PY.md](https://github.com/scottt/debugbreak/blob/master/HOW-TO-USE-DEBUGBREAK-GDB-PY.md) for sample usage.
 ```
 $ arm-none-linux-gnueabi-gdb -x debugbreak-gdb.py test/break-c++
 <...>
@@ -143,6 +175,6 @@ Behavior on Different Architectures
 <br>
 
 
+[![SRC](https://img.shields.io/badge/src-repo-green?logo=Org)](https://github.com/scottt/debugbreak)
 [![ORG](https://img.shields.io/badge/org-nodef-green?logo=Org)](https://nodef.github.io)
 ![](https://ga-beacon.deno.dev/G-RC63DPBH3P:SH3Eq-NoQ9mwgYeHWxu7cw/github.com/nodef/debugbreak.c)
-[![SRC](https://img.shields.io/badge/src-repo-green?logo=Org)](https://github.com/scottt/debugbreak)
