@@ -1,6 +1,6 @@
 {
   "name": "debugbreak.c",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Break into the debugger programmatically; Scott Tsai (2011).",
   "keywords": [
     "c",
